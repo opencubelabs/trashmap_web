@@ -1,0 +1,59 @@
+{
+	"_id": {
+		"$oid": "5d1dd2cd385eae285644f94b"
+	},
+	"type": "Feature",
+	"properties": {
+		"dtype" : "dry",
+		"access": "yes"
+	},
+	"geometry": {
+		"type": "Point",
+		"coordinates": [
+			77.60175704956055,
+			13.055169219793564
+		]
+	}
+}
+{
+	"_id": {
+		"$oid": "5d1dd326385eae285644f94c"
+	},
+	"type": "Feature",
+	"properties": {},
+	"geometry": {
+		"type": "Point",
+		"coordinates": [
+			77.60223984718323,
+			13.056318885193885
+		]
+	}
+}
+{
+	"_id": {
+		"$oid": "5d1dd352385eae285644f94d"
+	},
+	"type": "Feature",
+	"properties": {},
+	"geometry": {
+		"type": "Point",
+		"coordinates": [
+			77.59910702705383,
+			13.055367798744914
+		]
+	}
+}
+{
+	"_id": {
+		"$oid": "5d1dd38b385eae285644f94e"
+	},
+	"type": "Feature",
+	"properties": {},
+	"geometry": {
+		"type": "Point",
+		"coordinates": [
+			77.59283065795898,
+			13.070386175730775
+		]
+	}
+}

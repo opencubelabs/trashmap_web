@@ -1,26 +1,27 @@
-/*
-mapboxgl.accessToken = 'pk.eyJ1Ijoic2FsbWFuOTciLCJhIjoiY2p3ODMwZmVjMDJ4ajN6bWxyZXB6OHVlNyJ9.Un8GIVGSdU-muWmDs08VXw';
-if ("geolocation" in navigator) { 
-    navigator.geolocation.getCurrentPosition(position => { 
-        var map = new mapboxgl.Map({
-        // container id specified in the HTML
-          container: 'map',
+var onclick = function() {
+  $('.mapboxgl-ctrl-directions').remove();
+};
+$('#button').click(onclick);
 
-           // style URL
-         style: 'mapbox://styles/salman97/cjwad1kfv0xwa1cogsivi0y3a',
+//Error function for HTML geolocation
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      alert("Please enable location to access TrashMap")
+      break;
+    case error.POSITION_UNAVAILABLE:
+      alert("Location information is unavailable.")
+      break;
+    case error.TIMEOUT:
+      alert("The request to get user location timed out.")
+      break;
+    case error.UNKNOWN_ERROR:
+      alert("An unknown error occurred.")
+      break;
+  }
+}
 
-         // initial position in [lon, lat] format
-          center: [position.coords.longitude, position.coords.latitude],
-
-         // initial zoom
-
-         zoom: 14
-        });
-    currLat=position.coords.latitude;
-    
-    }); 
-}*/
-
+//Stuff for snackbar
 var x = document.getElementById("snackbar");
 x.className = "show";
 setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
@@ -36,6 +37,23 @@ var map = new mapboxgl.Map({
     center: [77.5891776061,12.986453], // starting position [lng, lat]
     zoom: 14 // starting zoom
 });
+
+//To get current location and fly map to that location
+if ("geolocation" in navigator) { 
+  navigator.geolocation.getCurrentPosition(position => { 
+    currLat=position.coords.latitude;
+    currLon=position.coords.longitude;
+
+    map.flyTo({
+      center: [currLon, currLat],
+      zoom:17
+    });
+            
+    $.get('/test?lati='+currLat+'&longi='+currLon, function(data){
+     // console.log(data.dustbins[0].geometry)
+    })
+  },showError)
+}
 
 //adding navigation controls to map
 map.addControl(new mapboxgl.NavigationControl());
@@ -64,7 +82,7 @@ var geocoder = new MapboxGeocoder({ // Initialize the geocoder
   bbox: [77.46517479843749,12.846706261537818, 77.7652388853515513, 13.122370423656735],   //boundary region
   mapboxgl: mapboxgl, // Set the mapbox-gl instance
   marker: false, // Do not use the default marker style
-  placeholder: '       Search for the nearest dustbin in locality (try it!)'
+  placeholder: 'Search for dustbins in a different locality'
 });
 document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
@@ -83,17 +101,42 @@ var longitude=e.lngLat.lng;
 
 //adding geojson source
 function init(){
+ if ("geolocation" in navigator) { 
+    navigator.geolocation.getCurrentPosition(position => { 
+      currLat=position.coords.latitude;
+      currLon=position.coords.longitude;            
+      $.get('/test?lati='+currLat+'&longi='+currLon, function(data){
+        xyz=data.dustbins;
+        //abc=JSON.stringify(xyz);
+        //console.log(abc)
+        var aaa={
+         "type": "FeatureCollection",
+         "features":  xyz
+        }
+
+        //console.log(aaa)
+        map.addSource("dustbins", {
+          type: 'geojson',
+          data: aaa
+        });
+      })
+    },showError)
+  }
+
+};
+
+/*
   map.addSource("dustbins", {
   type: 'geojson',
   data: 'geojson/bins.geojson'
   });
 
-};
+};*/
 
 
 //function for directions/navigation
 function buttonControl(flg,flt) {
-  console.log("Button works");
+  //console.log("Button works");
   navigator.geolocation.getCurrentPosition(position => {  
   currLat=position.coords.latitude;
   currLon=position.coords.longitude;
@@ -118,7 +161,7 @@ map.once('style.load', function(e) {
       "icon-size": 0.1
         }
       });
-    });
+  });
   
   map.on('click', function(e) {
     map.flyTo({
@@ -129,7 +172,16 @@ map.once('style.load', function(e) {
     layers: ['points'] // replace this with the name of the layer
     });
     if (!features.length) {
-     return;
+        var popup = new mapboxgl.Popup({closeOnClick: true})
+        .setLngLat(e.lngLat)
+        .setHTML('<h2>Add a Dustbin</h2><form action="/dustbins" method="post"><input type="hidden" name="lati" id="lt"/><input type="hidden" name="long" id="ln"/><h3>Type of Waste<br><input type="radio" name="dtype" value="Dry" checked>Dry<input type="radio" name="dtype" value="Wet">Wet<br><input type="radio" name="dtype" value="Wet & Dry">Both<input type="radio" name="dtype" value="N/A">Not Sure<br><br><h3>Is the Bin accessible?<br><input type="radio" name="access" value="Yes" checked>Yes<input type="radio" name="access" value="No" checked>No<br><br><h3>Please upload an image of the dustbin<br><input type="file" accept="image/*" capture="camera" name="cam" value=""><br><br><input type="submit" value="Submit"></form>')
+        .addTo(map);
+        var latitude=e.lngLat.lat;
+        var longitude=e.lngLat.lng;
+        //console.log(longitude);
+        document.getElementById("lt").value=latitude;
+        document.getElementById("ln").value=longitude;
+        return;
     }
 
     var feature = features[0];
@@ -138,8 +190,7 @@ map.once('style.load', function(e) {
     flg=featCoor[0];
     var popup = new mapboxgl.Popup({ offset: [0, -15] })
      .setLngLat(feature.geometry.coordinates)
-     //.setHTML('<h3>' + feature.properties.city + '</h3>')
-    . setHTML('<h2>'+feature.properties.city+'</h2><button type="button" class="button" onclick="buttonControl(flg,flt)">Navigate to this dustbin</button>')
+    . setHTML('<h2>Dustbin type: '+feature.properties.dtype+'</h2><h2>Accessible: '+feature.properties.access+'</h2><button type="button" class="button" onclick="buttonControl(flg,flt)">Navigate to this dustbin</button>')
      //.setHTML('<form method="get"><input type="hidden" name="feat" id="ftr"/><input type="submit" onclick="buttonControl(this)"></input>')
      .setLngLat(feature.geometry.coordinates)
      .addTo(map);
@@ -164,6 +215,7 @@ map.once('style.load', function(e) {
     }
   });
   geocoder.on('result', function(ev) {
+
     var features = map.queryRenderedFeatures(e.point, {
     layers: ['points'] // replace this with the name of the layer
     });
@@ -174,6 +226,7 @@ map.once('style.load', function(e) {
     var feature = features[0];
     
     var searchResult = ev.result.geometry;
+    //console.log(searchResult)
     map.getSource('single-point').setData(searchResult);
     var options = { units: 'miles' };
     features.forEach(function(bin) {
@@ -243,4 +296,3 @@ function sortLonLat(binIdentifier) {
 
   });
 });
-
