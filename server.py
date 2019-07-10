@@ -180,7 +180,7 @@ def images3():
 	file_type = request.GET.get('file_type')
 	folder_name = 'files'
 
-	s3 = boto3.client('s3', region_name='us-east-1', aws_access_key_id=os.environ['AKIA2ZAO4EI4L6FYHQLN'], aws_secret_access_key=os.environ['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'])
+	s3 = boto3.client('s3', region_name='us-east-1', aws_access_key_id=os.environ['aws_access_key_id'], aws_secret_access_key=os.environ['aws_secret_access_key'])
 
 	presigned_post = s3.generate_presigned_post(
 		Bucket = S3_BUCKET,
