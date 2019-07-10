@@ -26,16 +26,16 @@
 
   <!-- Main Stylesheet File -->
   <link href="css/style.css" rel="stylesheet">
-
-  <!-- =======================================================
-    Theme Name: Rapid
-    Theme URL: https://bootstrapmade.com/rapid-multipurpose-bootstrap-business-template/
-    Author: BootstrapMade.com
-    License: https://bootstrapmade.com/license/
-  ======================================================= -->
 </head>
 
 <body>
+  <div id="snackbar">Welcome to TrashMap</div>
+  <script type="text/javascript">
+    //Stuff for snackbar
+    var x = document.getElementById("snackbar");
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2500);
+  </script>
   <!--==========================
   Header
   ============================-->
@@ -87,7 +87,7 @@
           <h2>TrashMap - Mapping<br>India's Bins</h2>
           <h4>The TrashMap project aims at mapping all dustbins and waste management centres in the country</h4>
           <div>
-          	<a href="#" class="btn-get-started scrollto">Launch Map (Coming Soon!!!)</a>
+          	<a href="/map" class="btn-get-started scrollto">Launch Map</a>
           </div>
         </div>
   
