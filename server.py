@@ -141,9 +141,6 @@ def test():
 	abc= {'dustbins' : dust} 
 	#pprint(abc)
 	return abc
-	#message = {'greetings' : 'Hello from trashSalman!!!'}
-	#return json.loads(dumps(message))
-
 
 #Credentials for dustbin details
 @app.get('/dustbins')
@@ -156,6 +153,26 @@ def dustbins():
 	yn = request.forms.get('access')
 	lati = float(request.forms.get('lati'))
 	longi = float(request.forms.get('long'))
+	
+	"""img=request.files.get('img')
+	#print(img)
+
+
+	ACCESS_KEY_ID = 'AKIAJS6QHBEARBQBQPCA'
+	ACCESS_SECRET_KEY = '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'
+	BUCKET_NAME = 'something-to-test'
+
+	data = open(img, 'rb')
+	#print(data)
+	s3 = boto3.resource(
+	    's3',
+	    aws_access_key_id=ACCESS_KEY_ID,
+	    aws_secret_access_key=ACCESS_SECRET_KEY,
+	    config=Config(signature_version='s3v4')
+	)
+	s3.Bucket(BUCKET_NAME).put_object(Key=img, Body=data)
+
+	print ("Done")"""
 
 	db.dustbin2.insert_one({"type": "Feature",
 	"properties": {
@@ -170,36 +187,6 @@ def dustbins():
 		]
 	}})
 	redirect('/map')
-
-
-"""@app.route('/images3')
-def images3():
-	S3_BUCKET = 'trashmap2'
-
-	file_name = request.GET.get('file_name') + '-' + uuid.uuid4().hex
-	file_type = request.GET.get('file_type')
-	folder_name = 'files'
-
-	s3 = boto3.client('s3', region_name='us-east-1', aws_access_key_id=os.environ['aws_access_key_id'], aws_secret_access_key=os.environ['aws_secret_access_key'])
-
-	presigned_post = s3.generate_presigned_post(
-		Bucket = S3_BUCKET,
-		Key = folder_name+'/'+file_name,
-		Fields = {"acl": "public-read", "Content-Type": file_type},
-		Conditions = [
-		  {"acl": "public-read"},
-		  {"Content-Type": file_type}
-		],
-		ExpiresIn = 3600
-	)
-
-	# print presigned_post
-
-	return json.dumps({
-	'data': presigned_post,
-	'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, folder_name+'/'+file_name)
-})"""
-
 
 #team.html team members
 @app.get('/team')
@@ -239,10 +226,16 @@ def message():
 #CONFIGURATION_SET = "ConfigSet"
 
 # If necessary, replace us-west-2 with the AWS Region you're using for Amazon SES.
-	AWS_REGION = "region"
+	AWS_REGION = "us-east-1"
 
 # The subject line for the email.
 	SUBJECT = subject
+
+# The email body for recipients with non-HTML email clients.
+	BODY_TEXT = ("Amazon SES Test (Python)\r\n"
+			 "This email was sent with Amazon SES using the "
+			 "AWS SDK for Python (Boto)."
+			)
 			
 # The HTML body of the email.
 	BODY_HTML = """<!doctype html>

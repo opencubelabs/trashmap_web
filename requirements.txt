@@ -1,0 +1,16 @@
+bottle
+pymongo
+bson.json
+botocore.exceptions
+bson.objectid
+string
+pprint
+json
+datetime
+time
+math
+hashlib
+os
+smtplib
+boto3
+uuid

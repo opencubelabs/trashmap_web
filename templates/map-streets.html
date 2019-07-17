@@ -3,17 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>TrashMap | MapBox</title>
+  <title>TrashMap</title>
   <!-- Favicons -->
-  <link href="img/binn.png" rel="icon">
-  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
-
+  <link href="img/trash.png" rel="icon">
   <meta name="description" content="TrashMap">
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-  <!--<link rel='shortcut icon' href='http://www.gubbilabs.in/sites/default/files/nitobe_favicon_0_0.ico' type='image/x-icon'>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v1.0.0/mapbox-gl-geocoder.js'></script>
-  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v1.0.0/mapbox-gl-geocoder.css' type='text/css' />-->
   <link href="https://www.mapbox.com/base/latest/base.css" rel="stylesheet"> 
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
@@ -26,6 +20,8 @@
 
   <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.0/mapbox-gl-directions.js'></script>
   <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.0/mapbox-gl-directions.css' type='text/css' />
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+
 </head>
 
 <style type="text/css">
@@ -36,8 +32,8 @@
   left: 0;
   text-align: left;
   z-index: 6;
-  margin: 20px;
-  width: 30%;
+  margin: 5px;
+  width: 20%;
 }
 
 .mapname h3 {
@@ -95,7 +91,7 @@
 
 /*CONTENT INSIDE POPUP*/
 .mapboxgl-popup-content{
-  background-color: #8BC34A;
+  background-color: #A5D6A7;
    box-shadow: 5px 5px 3px #1B5E20;
    font-family: "Times New Roman";
      border-radius: 15px;
@@ -123,6 +119,7 @@
 /*GEOCODER (SEARCH BAR)*/
 .geocoder {
 position:absolute;
+opacity: 0.5;
 z-index:1;
 width:50%;
 left:50%;
@@ -130,9 +127,13 @@ margin-left:-25%;
 top:20px;
 }
 
+.geocoder:hover{
+  opacity: 1.0;
+
+}
 /*GEOCODER*/
 .mapboxgl-ctrl-geocoder { 
- background-color: #9ccc65;
+ background-color: white;
   min-width:100%; }
 
 /*GEOCODER INPUT*/
@@ -154,6 +155,14 @@ top:20px;
  
 /*MAPBOX DIRECTIONS*/
 .mapboxgl-ctrl-directions {
+  visibility: visible;
+  width: 20%;
+  min-width: 170px;
+  max-width: 170px;
+}
+
+.mapboxgl-ctrl-directions.hide {
+  visibility: hidden;
   width: 20%;
   min-width: 170px;
   max-width: 170px;
@@ -180,11 +189,20 @@ top:20px;
 
 #button{
   visibility: visible;
-
+  opacity: 0.5;
+  background: #1B5E20;  
+  /*background: transparent;*/
+  border: none;
+  color: white;
+  font-size: 13px;
+  font-weight: 100;
+  cursor: pointer;
 }
-
 #button.show{
   visibility: visible;
+}
+#button:hover{
+  opacity: 1.0;
 }
 
 /* The snackbar - position it at the bottom and in the middle of the screen */
@@ -258,6 +276,13 @@ top:20px;
 .button-secondary {
     background: rgb(66, 135, 245); /* this is a light blue */
 }
+
+.icon.home.button{
+  background: transparent;
+  color: #1B5E20;
+  font-size:15px;
+}
+
 </style>
 <body>
  <!-- <div id="snackbar">Welcome to TrashMap!</div>-->
@@ -268,10 +293,10 @@ top:20px;
   <h3 class='fancy' style="color:#1B5E20;" >TrashMap</h3>
 </div>
 <div class='pad1y left'>
-    <a href='/' class='icon home button' style='padding: 3px 3px;'>Home</a> <br/><br/>
-   
+    <a href='/' class='icon home button' style='padding: 3px 3px;'>Home</a> <br/>
+  
 </div>
- <!--<div id="button" class="button">Stop Navigation</div> -->
+<div id="button" class="button"  style='padding: 5px 5px;'>Stop Navigation</div> 
 </div>
   <div class='col12 clearfix'>
     <div id='map' class=''></div>    
