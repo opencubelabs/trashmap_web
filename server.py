@@ -158,8 +158,8 @@ def dustbins():
 	#print(img)
 
 
-	ACCESS_KEY_ID = 'AKIAJS6QHBEARBQBQPCA'
-	ACCESS_SECRET_KEY = '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'
+	ACCESS_KEY_ID = ''
+	ACCESS_SECRET_KEY = ''
 	BUCKET_NAME = 'something-to-test'
 
 	data = open(img, 'rb')
